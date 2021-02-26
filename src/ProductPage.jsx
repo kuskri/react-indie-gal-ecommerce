@@ -11,13 +11,9 @@ function ProductPage (props) {
     const {products, onAdd} = props;
     let { id } = useParams();
 
-
-
     //finding the product from praducts array whose id matched the id from param
     const product = useMemo(()=>products.find((x) => x._id === id),[id]);
 
-    
-    
     const [selectedImg, setSelectedImg] = useState();
     
     const productImg = useMemo(()=>{

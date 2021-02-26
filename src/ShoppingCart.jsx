@@ -6,7 +6,6 @@ import { Link} from "react-router-dom";
 function ShoppingCart(props) {
     const {cartItems, onAdd, onRemove, onDelete}=props;
 
-    
     const [isDesktop, setDesktop] = useState(window.innerWidth);
 
     const updateMedia = () => {
@@ -25,7 +24,7 @@ function ShoppingCart(props) {
     const totalPrice = itemsPrice + shippingPrice;
 
     return (
-            <Box>
+        <Box>
             <Flex marginX={10} marginTop={20}>
                 <Heading fontSize={['xl','2xl','2xl']} fontWeight='semibold' marginLeft={[null,'1rem','3.5rem']} >Shopping Cart</Heading>
                 <Spacer />
@@ -40,7 +39,7 @@ function ShoppingCart(props) {
                     <Th > </Th>
                     
                     <Th isNumeric>QUANTITY</Th>
-                    
+                    {/* RENDERING UNIT PRICE AND SUB TOTAL ONLY ON LARGER SCREENS */}
                     {isDesktop > 650 && (<Th isNumeric>UNIT PRICE</Th>)}
                     
                     {isDesktop > 550 && (<Th isNumeric>SUB TOTAL</Th>)}
@@ -49,64 +48,61 @@ function ShoppingCart(props) {
                 </Thead>)}
                 <Tbody>
                     {cartItems.map((item) => (
-                <Tr key={item._id} >                    
-                            <Td width={['4rem', 55, 70]} height='6rem' >
-                                <Link to={`/products/${item._id}`}><Image src={item.images[0]} boxSize={['4rem', 55, 70]}></Image></Link>
-                            </Td>
-                            <Td>
-                                <Text p={2} ><Link to={`/products/${item._id}`}>{item.productName}</Link></Text>
-                                <Text p={2} fontWeight='semibold' ><Link to={`/brand/${item.productBrand.toLowerCase()}`}>{item.productBrand}</Link></Text>
-                            </Td>
+                    <Tr key={item._id} >                    
+                        <Td width={['4rem', 55, 70]} height='6rem' >
+                            <Link to={`/products/${item._id}`}><Image src={item.images[0]} boxSize={['4rem', 55, 70]}></Image></Link>
+                        </Td>
+                        <Td>
+                            <Text p={2} ><Link to={`/products/${item._id}`}>{item.productName}</Link></Text>
+                            <Text p={2} fontWeight='semibold' ><Link to={`/brand/${item.productBrand.toLowerCase()}`}>{item.productBrand}</Link></Text>
+                        </Td>
 
-                            <Td isNumeric>
-                                <Flex justifyContent='flex-end' >
-                                    <Button  size='sm'  p={2} variant="outline" onClick={() => onRemove(item)}>-</Button>
-                                    <Text p={2}textAlign='center' boxSize={["1.5rem", "2rem", "2.7rem"]}>{item.qty}</Text>
-                                    <Button  size='sm' variant="outline" onClick={() => onAdd(item)}>+</Button>
-                                </Flex>
-                            </Td>
+                        <Td isNumeric>
+                            <Flex justifyContent='flex-end' >
+                                <Button  size='sm'  p={2} variant="outline" onClick={() => onRemove(item)}>-</Button>
+                                <Text p={2}textAlign='center' boxSize={["1.5rem", "2rem", "2.7rem"]}>{item.qty}</Text>
+                                <Button  size='sm' variant="outline" onClick={() => onAdd(item)}>+</Button>
+                            </Flex>
+                        </Td>
 
-
-                            {isDesktop > 650 && (<Td isNumeric><Text m='auto' textAlign='right' p={[1,2,3]}>{item.price.toFixed(2)} €</Text></Td>)}
-                            {isDesktop > 550 && (<Td isNumeric><Text m='auto' textAlign='right' p={3} >{(item.qty*item.price).toFixed(2)} €</Text></Td>)}
-                            <Td isNumeric><Button m='auto' size='sm' p={2} variant="outline" onClick={() => onDelete(item)}><DeleteIcon /></Button></Td>
-                </Tr>
-                
-            ))}
+                        {/* RENDERING UNIT PRICE AND SUB TOTAL ONLY ON LARGER SCREENS */}
+                        {isDesktop > 650 && (<Td isNumeric><Text m='auto' textAlign='right' p={[1,2,3]}>{item.price.toFixed(2)} €</Text></Td>)}
+                        {isDesktop > 550 && (<Td isNumeric><Text m='auto' textAlign='right' p={3} >{(item.qty*item.price).toFixed(2)} €</Text></Td>)}
+                        <Td isNumeric><Button m='auto' size='sm' p={2} variant="outline" onClick={() => onDelete(item)}><DeleteIcon /></Button></Td>
+                    </Tr>))}
                 </Tbody>
+                {/* RENDERING THE FOOTER ONLY IF THERE ARE ITEMS IN THE CART */}
                 {cartItems.length > 0 && (
                 <Tfoot>
                     <Tr>
-                    <Th>PRODUCT</Th>
-                    <Th > </Th>
-                    <Th isNumeric>QUANTITY</Th>
-                    {isDesktop > 650 &&  (<Th isNumeric>UNIT PRICE</Th>)}
-                    {isDesktop > 550 && (<Th isNumeric>SUB TOTAL</Th>)}
-                    <Th></Th>
+                        <Th>PRODUCT</Th>
+                        <Th > </Th>
+                        <Th isNumeric>QUANTITY</Th>
+                        {isDesktop > 650 &&  (<Th isNumeric>UNIT PRICE</Th>)}
+                        {isDesktop > 550 && (<Th isNumeric>SUB TOTAL</Th>)}
+                        <Th></Th>
                     </Tr>
                 </Tfoot>)}
-                </Table>
-
-
+            </Table>
         <Box>
                         
-            <Box >
-                {cartItems.length === 0 && <Text m={10} fontSize='xl'>The cart is empty</Text>}
-            </Box>
+        <Box >
+            {cartItems.length === 0 && <Text m={10} fontSize='xl'>The cart is empty</Text>}
+        </Box>
 
-            {/* if we have products in the cart than we render the code bellow */}
-            {cartItems !== 0 && (
-                <Box>
-                    <Flex justifyContent={['center', 'flex-end','flex-end']} m='3.5rem'>
-                        <Table variant="simple" width='sm'>
-                            <Tbody fontSize='lg'>
-                                <Tr>
+        {/* if we have products in the cart than we render the code bellow */}
+        {cartItems !== 0 && (
+            <Box>
+                <Flex justifyContent={['center', 'flex-end','flex-end']} m='3.5rem'>
+                    <Table variant="simple" width='sm'>
+                        <Tbody fontSize='lg'>
+                            <Tr>
                                 <Td >Subtotal</Td>
                                 <Td isNumeric>{itemsPrice.toFixed(2)} €</Td>
-                                </Tr>
-                                {/* we display the shipping price and total only if we have items in the cart */}
-                                {(cartItems.length > 0) ?
-                                (<>
+                            </Tr>
+                            {/* we display the shipping price and total only if we have items in the cart */}
+                            {(cartItems.length > 0) ?
+                            (<>
                                 <Tr>
                                     <Td> Shipping Price </Td>
                                     <Td isNumeric> {shippingPrice.toFixed(2)} € </Td>
@@ -115,25 +111,25 @@ function ShoppingCart(props) {
                                     <Td> Total </Td>
                                     <Td isNumeric>{totalPrice.toFixed(2)} €</Td>
                                 </Tr>
-                                </>)
-                                : (<Tr>
-                                    <Td>Total</Td>
-                                    <Td isNumeric>{0.00} €</Td>
-                                </Tr>)}
-                            </Tbody>
-                        </Table>
-                    </Flex>
-                    <Flex m={20} justifyContent={['center', 'flex-end','flex-end']}>
-                        <Button bgColor='black' color='whiteAlpha.900' paddingY='1rem' borderRadius='0rem' w='8.5rem' fontSize={['xs','sm','sm']}>CHECKOUT</Button>
-                    </Flex>
-                </Box>   
+                            </>)
+                            : (<Tr>
+                                <Td>Total</Td>
+                                <Td isNumeric>{0.00} €</Td>
+                            </Tr>)}
+                        </Tbody>
+                    </Table>
+                </Flex>
+                <Flex m={20} justifyContent={['center', 'flex-end','flex-end']}>
+                    <Button bgColor='black' color='whiteAlpha.900' paddingY='1rem' borderRadius='0rem' w='8.5rem' fontSize={['xs','sm','sm']}>CHECKOUT</Button>
+                </Flex>
+            </Box>   
             )}
 
             <Flex m={20} justifyContent={['center', 'flex-start','flex-start']}>
                 <Link to="/products"><Button colorScheme='black' variant="outline" paddingY='1rem' borderRadius='0rem' w='12rem' fontSize={['xs','sm','sm']}>CONTINUE SHOPPING</Button></Link>
             </Flex>
         </Box>
-        </Box>
+    </Box>
     );
 }
 
