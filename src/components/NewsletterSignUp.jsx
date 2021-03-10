@@ -57,7 +57,7 @@ function Signup() {
                             <Button type="submit" colorScheme="pink" mr={3}>Sign Up</Button>
                             <Button variant="ghost"  onClick={onClose}>Close</Button>
                         </ModalFooter>
-                    </ModalContent>
+                        </ModalContent>
                 </Modal>
             </Flex>
         </Box>

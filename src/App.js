@@ -1,90 +1,132 @@
-import './App.css';
-import React, {useState, useEffect} from 'react';
-import ProductPage from './ProductPage';
-import Home from './Home';
-import Header from './Header';
-import Footer from './Footer';
-import Copyright from './Copyright';
-import Signup from './Signup';
-import AboutUs from './AboutUs';
-import OurEthics from './OurEthics';
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import ScrollToTop from './ScrollToTop'
-import MyAccount from './MyAccount';
-import ShoppingCart from './ShoppingCart';
-import ProductsList from './ProductsList'
-import {data} from './Products'
-import Category from './Category';
-import Brand from './Brand';
+import React, { useState, useEffect } from "react"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { Box } from "@chakra-ui/react"
+import { data } from "./DATA"
+import ScrollToTop from "./ScrollToTop"
+//import pages
+import ProductDetails from "./pages/ProductDetails"
+import Home from "./pages/Home"
+import AboutUs from "./pages/AboutUs"
+import OurEthics from "./pages/OurEthics"
+import ShoppingCart from "./pages/ShoppingCart"
+import Products from "./pages/Products"
+import Category from "./pages/Category"
+import Brand from "./pages/Brand"
+import MyAccount from "./pages/MyAccount"
+//import components
+import NavBar from "./components/NavBar"
+import Footer from "./components/Footer"
+import Copyright from "./components/Copyright"
+import NewsletterSignUp from "./components/NewsletterSignUp"
 
-
-
-const cartItemsFromLocalStorage = JSON.parse(localStorage.getItem('cart') || '[]')
+const cartItemsFromLocalStorage = JSON.parse(
+  localStorage.getItem("cart") || "[]"
+)
 
 function App() {
-  const {products} = data;
-  const [cartItems, setCartItems] = useState(cartItemsFromLocalStorage);
+  const { products } = data
+  const [cartItems, setCartItems] = useState(cartItemsFromLocalStorage)
 
   //adding products to cart. if the prod id already exist in cart, then augmenting only quantity
   const onAdd = (product) => {
-    const alreadyInCart = cartItems.find((prevProduct) => prevProduct._id === product._id);
-    if(alreadyInCart) {
+    const alreadyInCart = cartItems.find(
+      (prevProduct) => prevProduct._id === product._id
+    )
+    if (alreadyInCart) {
       setCartItems(
-        cartItems.map((prevProduct) => 
-      prevProduct._id === product._id ? {...alreadyInCart, qty: alreadyInCart.qty + 1} : prevProduct))
+        cartItems.map((prevProduct) =>
+          prevProduct._id === product._id
+            ? { ...alreadyInCart, qty: alreadyInCart.qty + 1 }
+            : prevProduct
+        )
+      )
     } else {
-    setCartItems([...cartItems, {...product, qty: 1}]);
-    }
-  };
-
-  //removing products from cart
-  const onRemove = (product) => {
-    const existsInCart = cartItems.find((prevProduct) => prevProduct._id === product._id);
-    if(existsInCart.qty === 1) {
-      setCartItems(cartItems.filter((prevProduct) => prevProduct._id !== product._id));
-    } else {
-      setCartItems(cartItems.map((prevProduct) => 
-        prevProduct._id === product._id ? {...existsInCart, qty: existsInCart.qty - 1} : prevProduct))
-    }
-  };
-
-  //deleting items from cart
-  const onDelete = (product) => {
-    const existsInCart = cartItems.find((prevProduct) => prevProduct._id === product._id);
-    if(existsInCart) {
-      setCartItems(cartItems.filter((prevProduct) => prevProduct._id !== product._id));
+      setCartItems([...cartItems, { ...product, qty: 1 }])
     }
   }
 
-  useEffect(()=>{
-    localStorage.setItem('cart', JSON.stringify(cartItems))
-  }, [cartItems]);
+  //removing products from cart
+  const onRemove = (product) => {
+    const existsInCart = cartItems.find(
+      (prevProduct) => prevProduct._id === product._id
+    )
+    if (existsInCart.qty === 1) {
+      setCartItems(
+        cartItems.filter((prevProduct) => prevProduct._id !== product._id)
+      )
+    } else {
+      setCartItems(
+        cartItems.map((prevProduct) =>
+          prevProduct._id === product._id
+            ? { ...existsInCart, qty: existsInCart.qty - 1 }
+            : prevProduct
+        )
+      )
+    }
+  }
 
-  const getTotalCartItems = cartItems.reduce((acumulator, currentItem) => acumulator + currentItem.qty, 0);
+  //deleting items from cart
+  const onDelete = (product) => {
+    const existsInCart = cartItems.find(
+      (prevProduct) => prevProduct._id === product._id
+    )
+    if (existsInCart) {
+      setCartItems(
+        cartItems.filter((prevProduct) => prevProduct._id !== product._id)
+      )
+    }
+  }
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems))
+  }, [cartItems])
+
+  //total amount of items in the cart
+  const getTotalCartItems = cartItems.reduce(
+    (acumulator, currentItem) => acumulator + currentItem.qty,
+    0
+  )
 
   return (
     <Router>
       <ScrollToTop />
-      <div className="App">
-        <Header countCartItems={getTotalCartItems} />
+      <Box textAlign="center">
+        <NavBar countCartItems={getTotalCartItems} />
         <Switch>
-          
-          <Route path="/products/:id"><ProductPage products={products} onAdd={onAdd} /></Route>
-          <Route path="/category/:category" ><Category products={products} onAdd={onAdd} /></Route>
-          <Route path="/brand/:brand" exact><Brand products={products} onAdd={onAdd} /></Route>
-          <Route path="/shopping-cart" ><ShoppingCart cartItems={cartItems} onAdd={onAdd} onRemove={onRemove} onDelete={onDelete} products={products} /></Route>
-          <Route path="/products" exact><ProductsList products={products} onAdd={onAdd} /></Route>
+          <Route path="/products/:id">
+            <ProductDetails products={products} onAdd={onAdd} />
+          </Route>
+          <Route path="/category/:category">
+            <Category products={products} onAdd={onAdd} />
+          </Route>
+          <Route path="/brand/:brand" exact>
+            <Brand products={products} onAdd={onAdd} />
+          </Route>
+          <Route path="/shopping-cart">
+            <ShoppingCart
+              cartItems={cartItems}
+              onAdd={onAdd}
+              onRemove={onRemove}
+              onDelete={onDelete}
+              products={products}
+            />
+          </Route>
+          <Route path="/products" exact>
+            <Products products={products} onAdd={onAdd} />
+          </Route>
           <Route path="/our-ethics" component={OurEthics}></Route>
           <Route path="/about-us" component={AboutUs}></Route>
           <Route path="/my-account" component={MyAccount}></Route>
-          <Route path="/" exact >< Home onAdd={onAdd} products={products} /></Route>
+          <Route path="/" exact>
+            <Home onAdd={onAdd} products={products} />
+          </Route>
         </Switch>
-        <Signup />
+        <NewsletterSignUp />
         <Footer />
         <Copyright />
-      </div>
+      </Box>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
