@@ -20,11 +20,9 @@ function SearchFeature(props) {
 
   useEffect(() => {
     if (isReset || reset) {
-      console.log("sono dentro")
       setSearchTerm("")
       setIsReset(false)
     }
-    console.log("sono fuori ", searchTerm, isReset)
   }, [reset])
 
   return (
@@ -33,6 +31,7 @@ function SearchFeature(props) {
       <Input
         value={searchTerm}
         onChange={onChangeSearch}
+        autoComplete="off"
         placeholder="Search product"
       ></Input>
       {products
@@ -40,21 +39,15 @@ function SearchFeature(props) {
           if (searchTerm === "" || isReset) {
             return ""
           } else if (
-            product.productName
-              .toLocaleLowerCase()
-              .includes(searchTerm.toLocaleLowerCase())
+            product.productName.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
           ) {
             return product
           } else if (
-            product.productBrand
-              .toLocaleLowerCase()
-              .includes(searchTerm.toLocaleLowerCase())
+            product.productBrand.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
           ) {
             return product
           } else if (
-            product.category
-              .toLocaleLowerCase()
-              .includes(searchTerm.toLocaleLowerCase())
+            product.category.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
           ) {
             return product
           }
@@ -62,10 +55,7 @@ function SearchFeature(props) {
         .map((product, key) => {
           return (
             <Box>
-              <Link
-                to={`/products/${product._id}`}
-                onClick={searchModalOnClose}
-              >
+              <Link to={`/products/${product._id}`} onClick={searchModalOnClose}>
                 <Flex p={2} key={key} onClick={onClose}>
                   <Image src={`/${product.images[0]}`} boxSize="40px"></Image>
                   <Text p={2} fontSize="sm" key={products._id}>

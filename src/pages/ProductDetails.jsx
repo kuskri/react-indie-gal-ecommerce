@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { Box, Text, Flex, Button, Image, Icon } from "@chakra-ui/react"
 import { RiShoppingCartLine } from "react-icons/ri"
 import { useParams } from "react-router-dom"
@@ -13,9 +13,9 @@ function ProductDetails(props) {
 
   const [selectedImg, setSelectedImg] = useState()
 
-  const productImg = useMemo(() => {
-    return selectedImg || product.images[0]
-  }, [id, selectedImg])
+  useEffect(() => {
+    setSelectedImg(product.images[0])
+  }, [product])
 
   if (!product) {
     return <Text m={20}>Product Not Found</Text>
@@ -29,11 +29,7 @@ function ProductDetails(props) {
         flexDir={["column", "column", "row"]}
       >
         <Box width={["20rem", "26rem", "30rem"]} minHeight="30rem">
-          <Image
-            boxSize={["17rem", "19rem", "22rem"]}
-            src={`/${productImg}`}
-            m={5}
-          ></Image>
+          <Image boxSize={["17rem", "19rem", "22rem"]} src={`/${selectedImg}`} m={5}></Image>
           <Flex
             flexWrap="wrap"
             w={["17rem", "19rem", "23rem"]}
@@ -58,21 +54,11 @@ function ProductDetails(props) {
         </Box>
 
         <Box textAlign="left" maxWidth="40rem" m={5} p={5} fontSize="md">
-          <Text
-            fontSize={["lg", "xl", "2xl"]}
-            fontWeight="semibold"
-            marginBottom={5}
-          >
+          <Text fontSize={["lg", "xl", "2xl"]} fontWeight="semibold" marginBottom={5}>
             {product.productName}
           </Text>
-          <Text
-            fontSize={["md", "lg", "xl"]}
-            fontWeight="semibold"
-            marginBottom={5}
-          >
-            <Link to={`/brand/${product.productBrand.toLowerCase()}`}>
-              {product.productBrand}
-            </Link>
+          <Text fontSize={["md", "lg", "xl"]} fontWeight="semibold" marginBottom={5}>
+            <Link to={`/brand/${product.productBrand.toLowerCase()}`}>{product.productBrand}</Link>
           </Text>
           <Text
             fontSize={["lg", "xl", "2xl"]}
@@ -83,11 +69,7 @@ function ProductDetails(props) {
             <Icon as={RiShoppingCartLine} marginRight={5} />
             ADD TO CART
           </Button>
-          <Text
-            fontSize={["md", "lg", "xl"]}
-            fontWeight="semibold"
-            marginBottom={5}
-          >
+          <Text fontSize={["md", "lg", "xl"]} fontWeight="semibold" marginBottom={5}>
             DESCRIPTION
           </Text>
           <Text marginBottom={5}>{product.description}</Text>
